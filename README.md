@@ -1,6 +1,6 @@
 # pi-vo
 
-[![Watch Reference Video](https://img.shields.io/badge/▶-Watch%20Reference%20Video-red?style=for-the-badge&logo=video&logoColor=white)](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
+[![Watch Video](https://img.shields.io/badge/▶-Watch%20Video-red?style=for-the-badge)](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
 
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
 
