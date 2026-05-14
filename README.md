@@ -15,7 +15,7 @@ Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent
 
 ## Reference Usage
 
-<video src="https://chaosdiscovery.s-ul.eu/iB5hNOsX" controls width="600"></video>
+[Watch the reference usage video](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
 
 ## Usage
 
