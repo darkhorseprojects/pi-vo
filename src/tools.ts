@@ -14,7 +14,7 @@ export function createVoiceTools(runtime: PiVoRuntime): ReturnType<typeof define
       async execute(_id: string, params: { text: string }, _signal: AbortSignal | undefined, _onUpdate: AgentToolUpdateCallback<{ queued: boolean }> | undefined, ctx?: ExtensionContext) {
         runtime.speakInBackground(ctx ?? params.text, ctx ? params.text : undefined);
         return {
-          content: [{ type: "text", text: "Text queued for speech" }],
+          content: [{ type: "text", text: `Speaking: "${params.text}"` }],
           details: { queued: true },
         };
       },
