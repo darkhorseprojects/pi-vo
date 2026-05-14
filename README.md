@@ -13,6 +13,10 @@ Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent
 - **Low VRAM**: 4-bit quantization with CPU offload reduces VRAM to ~6GB
 - **Configurable**: Voice personality via voice design parameters
 
+## Reference Usage
+
+<video src="https://chaosdiscovery.s-ul.eu/iB5hNOsX" controls width="600"></video>
+
 ## Usage
 
 ```
