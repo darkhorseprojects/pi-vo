@@ -34,6 +34,7 @@ export class PiVoRuntime {
   #speechGeneration = 0;
   #activeSpeechJobs = 0;
   #speechQueue: Promise<unknown> = Promise.resolve();
+  #listeningIntent = false;
   #toggling?: Promise<void>;
   #cancelStart = false;
   #warmup?: Promise<void>;
@@ -115,7 +116,14 @@ export class PiVoRuntime {
   }
 
   stopPlayback(): void {
+    void this.#output.stopPlayback();
+  }
+
+  cancelSpeech(): void {
     this.#speechGeneration += 1;
+    this.#listeningIntent = false;
+    // Reset the queue so no pending voice_say jobs execute after cancellation
+    this.#speechQueue = Promise.resolve();
     void this.#output.stopPlayback();
   }
 
@@ -126,7 +134,7 @@ export class PiVoRuntime {
   }
 
   async stop(ctx?: ExtensionContext): Promise<void> {
-    this.#speechGeneration += 1;
+    this.cancelSpeech();
     this.#clearTranscriptTimer();
     this.forgetTranscript();
     await this.#output.stopPlayback();
@@ -134,7 +142,8 @@ export class PiVoRuntime {
     await Promise.all([this.#asr.stop(), this.#tts.stop()]);
     await this.#output.stop();
     this.#warmup = undefined;
-    this.#setState("idle");
+    this.#state = "idle";
+    this.#error = "";
     ctx?.ui.notify("Stopped pi-vo", "info");
   }
 
@@ -200,6 +209,7 @@ export class PiVoRuntime {
     try {
       this.#ctx = ctx;
       if (this.#recorder) {
+        this.#listeningIntent = false;
         await this.#flushTranscript();
         this.#setState("idle");
         return;
@@ -217,6 +227,7 @@ export class PiVoRuntime {
         return;
       }
 
+      this.#listeningIntent = true;
       this.#startRecorder(ctx);
       this.#setState("listening");
     } catch (error) {
@@ -283,7 +294,7 @@ export class PiVoRuntime {
     }
     const final = await recorder.close();
     await this.#queueTranscript(final, true);
-    this.#ctx = undefined;
+    // Don't clear #ctx here — keep it for speech state restoration
   }
 
   #queueTranscript(audio: Buffer, final: boolean): Promise<void> {
@@ -317,11 +328,11 @@ export class PiVoRuntime {
 
   async #speakOnce(text: string, generation: number): Promise<string> {
     if (generation !== this.#speechGeneration) throw new SpeechCancelled();
-    const wasListening = this.#recorder !== undefined;
     const savedCtx = this.#ctx;
     try {
-      this.#setState("working");
-      await this.#flushTranscript();
+      this.#setState("speaking");
+      // Stop mic while we're generating/playing — recorder restored after if still intended
+      if (this.#recorder) await this.#flushTranscript();
       await this.#warmModels();
       if (generation !== this.#speechGeneration) throw new SpeechCancelled();
 
@@ -338,15 +349,17 @@ export class PiVoRuntime {
       this.#setState("speaking");
       await this.#output.play(result.path);
       if (generation !== this.#speechGeneration) throw new SpeechCancelled();
-      if (wasListening && savedCtx) {
+
+      // Only restore listening when this is the LAST queued speech job
+      if (this.#listeningIntent && this.#activeSpeechJobs <= 1 && savedCtx) {
         this.#ctx = savedCtx;
         if (!this.#recorder) this.#startRecorder(savedCtx);
       }
-      this.#setState(this.#recorder ? "listening" : "idle");
+      this.#setState(this.#recorder ? "listening" : this.#listeningIntent ? "working" : "idle");
       return result.path;
     } catch (error) {
-      this.#setState("idle");
       if (generation !== this.#speechGeneration) throw new SpeechCancelled();
+      this.#setState(this.#recorder ? "listening" : "idle");
       throw error;
     }
   }

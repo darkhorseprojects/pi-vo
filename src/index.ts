@@ -14,7 +14,8 @@ export default function piVo(pi: ExtensionAPI): void {
     runtime.setState(ctx, "idle");
     ctx.ui.onTerminalInput((data: string) => {
       if (data === "\x1b") {
-        runtime.stopPlayback();
+        runtime.cancelSpeech();
+        runtime.setState(ctx, "idle");
         return undefined;
       }
       if (matchesKey(data, "enter") && !isKeyRelease(data) && !isKeyRepeat(data)) {

@@ -45,13 +45,16 @@ export class AudioOutput {
     });
     this.#current = child;
 
+    // Suppress all stdin errors (e.g. EPIPE when playback is cancelled mid-write)
+    child.stdin.on("error", () => {});
+
     child.stderr.on("data", (chunk: Buffer) => {
       process.stderr.write(`[pi-vo playback] ${chunk.toString()}`);
     });
 
     try {
       await writeAll(child, fadeIn(wav.pcm));
-      child.stdin.end();
+      if (!child.stdin.destroyed) child.stdin.end();
       await waitForExit(child);
     } finally {
       if (this.#current === child) this.#current = undefined;
@@ -90,19 +93,34 @@ function fadeIn(pcm: Buffer): Buffer {
 
 async function writeAll(child: ChildProcessByStdio<Writable, null, Readable>, data: Buffer): Promise<void> {
   const chunkSize = 64 * 1024;
+  let broken = false;
   for (let offset = 0; offset < data.length; offset += chunkSize) {
+    if (broken || child.stdin.destroyed) break;
     const chunk = data.subarray(offset, Math.min(offset + chunkSize, data.length));
     await new Promise<void>((resolve, reject) => {
-      child.stdin.write(chunk, (error) => (error ? reject(error) : resolve()));
+      child.stdin.write(chunk, (error) => {
+        if (error) {
+          // EPIPE / ERR_STREAM_DESTROYED: playback was cancelled — not fatal
+          const code = (error as NodeJS.ErrnoException).code;
+          if (code === "EPIPE" || code === "ERR_STREAM_DESTROYED") broken = true;
+          else reject(error);
+        }
+        resolve();
+      });
     });
   }
 }
 
 function waitForExit(child: ChildProcessByStdio<Writable, null, Readable>): Promise<void> {
   return new Promise((resolve, reject) => {
-    child.once("error", reject);
+    child.once("error", (err) => {
+      // Ignore errors after we've already started shutting down
+      if ((err as NodeJS.ErrnoException).code !== "EPIPE") reject(err);
+      else resolve();
+    });
     child.once("close", (code, signal) => {
-      if (code === 0) resolve();
+      // SIGTERM / SIGKILL are expected when we cancel playback — treat as success
+      if (code === 0 || signal === "SIGTERM" || signal === "SIGKILL") resolve();
       else reject(new Error(`Playback exited with ${signal ?? code ?? "unknown status"}`));
     });
   });
