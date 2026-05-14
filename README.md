@@ -46,7 +46,7 @@ For voice cloning, provide a reference audio file and its transcript. The audio 
 ```json
 {
   "ttsReferenceAudio": "/path/to/voice-sample.wav",
-  "ttsVoiceDesign": "warm, conversational, with emotional range and natural pauses"
+  "ttsVoiceDesign": "female, young adult, moderate pitch"
 }
 ```
 
@@ -54,11 +54,11 @@ The reference audio must be 16kHz PCM WAV.
 
 ### Voice Style Guidance
 
-Use `ttsVoiceDesign` to guide the delivery style (emotional tone, pacing, character):
+Use `ttsVoiceDesign` to guide the delivery style (emotional tone, pace, character). Valid attributes are: gender, age, pitch, style, and accent. Combine with comma + space:
 
 ```json
 {
-  "ttsVoiceDesign": "warm, conversational, with emotional range and natural pauses"
+  "ttsVoiceDesign": "female, young adult, high pitch, american accent"
 }
 ```
 
