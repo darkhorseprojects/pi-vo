@@ -94,7 +94,7 @@ const defaults: PiVoConfig = {
   ttsOffloadFolder: join(homedir(), ".pi", "pi-vo-offload"),
   ttsReferenceAudio: "",
   ttsVoiceDesign: "",
-  ttsNumSteps: 16,
+  ttsNumSteps: 32,
 };
 
 const envMap: Record<string, keyof UserConfig> = {
