@@ -47,5 +47,5 @@
     "@types/node": "latest",
     "typescript": "latest"
   },
-  "license": "UNLICENSED"
+  "license": "Apache-2.0"
 }

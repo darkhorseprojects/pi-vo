@@ -2,6 +2,8 @@
 
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
 
+[![CI](https://github.com/earendil-works/pi-vo/actions/workflows/ci.yml/badge.svg)](https://github.com/earendil-works/pi-vo/actions/workflows/ci.yml)
+
 ## Features
 
 - **Live Speech-to-Text**: Qwen3-ASR transcribes microphone input in real-time
@@ -90,25 +92,6 @@ PI_VO_TTS_LOAD_IN_4BIT=1
 PI_VO_TTS_QUANT_TYPE=nf4
 PI_VO_TTS_COMPUTE_DTYPE=bfloat16
 PI_VO_TTS_CPU_OFFLOAD=1
-```
-
-## Architecture
-
-```
-┌─────────────────────────────────────────────┐
-│              Pi Extension Manager              │
-└───────────────┬────────────────┬───────────────┘
-                │                │
-      ┌─────────▼───┐    ┌───────▼────────┐
-      │ ASR Worker  │    │  TTS Worker    │
-      │ (qwen-asr)  │    │ (omnivoice)    │
-      └──────┬──────┘    └───────┬────────┘
-             │                   │
-             └─────────┬─────────┘
-                       │
-              ┌────────▼────────┐
-              │   Unix Socket   │
-              └────────────────┘
 ```
 
 ## Requirements
