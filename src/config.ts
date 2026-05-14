@@ -40,8 +40,7 @@ export interface PiVoConfig {
   ttsComputeDtype: "float32" | "float16" | "bfloat16";
   ttsCpuOffload: boolean;
   ttsOffloadFolder: string;
-  ttsPromptAudio: string;
-  ttsPromptText: string;
+  ttsReferenceAudio: string;
   ttsVoiceDesign: string;
   ttsNumSteps: number;
 }
@@ -93,8 +92,7 @@ const defaults: PiVoConfig = {
   ttsComputeDtype: "bfloat16",
   ttsCpuOffload: true,
   ttsOffloadFolder: join(homedir(), ".pi", "pi-vo-offload"),
-  ttsPromptAudio: "",
-  ttsPromptText: "",
+  ttsReferenceAudio: "",
   ttsVoiceDesign: "",
   ttsNumSteps: 16,
 };
@@ -133,8 +131,7 @@ const envMap: Record<string, keyof UserConfig> = {
   PI_VO_TTS_COMPUTE_DTYPE: "ttsComputeDtype",
   PI_VO_TTS_CPU_OFFLOAD: "ttsCpuOffload",
   PI_VO_TTS_OFFLOAD_FOLDER: "ttsOffloadFolder",
-  PI_VO_TTS_PROMPT_AUDIO: "ttsPromptAudio",
-  PI_VO_TTS_PROMPT_TEXT: "ttsPromptText",
+  PI_VO_TTS_REFERENCE_AUDIO: "ttsReferenceAudio",
   PI_VO_TTS_VOICE_DESIGN: "ttsVoiceDesign",
   PI_VO_TTS_NUM_STEPS: "ttsNumSteps",
 };
@@ -182,7 +179,7 @@ export function loadConfig(overrides: UserConfig = {}): PiVoConfig {
     audioDir: expandHome(merged.audioDir),
     voicePython: expandHome(merged.voicePython),
     ttsOffloadFolder: merged.ttsOffloadFolder ? expandHome(merged.ttsOffloadFolder) : "",
-    ttsPromptAudio: merged.ttsPromptAudio ? expandHome(merged.ttsPromptAudio) : "",
+    ttsReferenceAudio: merged.ttsReferenceAudio ? expandHome(merged.ttsReferenceAudio) : "",
   };
 
   validateConfig(resolved);
