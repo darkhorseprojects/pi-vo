@@ -15,7 +15,9 @@ Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent
 
 ## Reference Usage
 
-[Watch the reference usage video](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
+<a href="https://chaosdiscovery.s-ul.eu/iB5hNOsX" target="_blank">
+  <img src="https://img.shields.io/badge/▶-Watch%20Reference%20Video-red?style=for-the-badge" alt="Watch reference usage video">
+</a>
 
 ## Usage
 
