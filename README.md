@@ -3,6 +3,7 @@
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
 
 [![CI](https://github.com/earendil-works/pi-vo/actions/workflows/ci.yml/badge.svg)](https://github.com/earendil-works/pi-vo/actions/workflows/ci.yml)
+[![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ## Features
 
@@ -101,3 +102,7 @@ PI_VO_TTS_CPU_OFFLOAD=1
 - CUDA-compatible GPU
 - PipeWire or PulseAudio
 - ~12GB VRAM (with 4-bit quantization)
+
+## License
+
+Apache 2.0 - see [LICENSE](LICENSE) file for details.
