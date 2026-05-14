@@ -41,6 +41,7 @@ class LoadedConfig:
     compute_dtype: str
     cpu_offload: bool
     offload_folder: str
+    load_asr: bool
 
 
 def main() -> None:
@@ -83,7 +84,7 @@ def load(req: dict[str, Any]) -> dict[str, Any]:
 
     torch.set_grad_enabled(False)
     dtype = torch_dtype(torch, cfg.dtype)
-    base: dict[str, Any] = {"device_map": cfg.device_map, "dtype": dtype, "load_asr": False}
+    base: dict[str, Any] = {"device_map": cfg.device_map, "dtype": dtype, "load_asr": cfg.load_asr}
     if cfg.cpu_offload and cfg.offload_folder:
         Path(cfg.offload_folder).expanduser().mkdir(parents=True, exist_ok=True)
         base["offload_folder"] = str(Path(cfg.offload_folder).expanduser())
@@ -126,10 +127,7 @@ def speak(req: dict[str, Any]) -> dict[str, Any]:
     if not text:
         raise ValueError("Text is empty")
 
-    prompt_audio = str(req.get("promptAudio") or "").strip()
-    prompt_text = str(req.get("promptText") or "").strip()
-    if prompt_audio and not prompt_text:
-        raise ValueError("ttsPromptText is required when ttsPromptAudio is set")
+    reference_audio = str(req.get("referenceAudio") or "").strip()
 
     output_path = Path(str(req.get("outputPath") or "speech.wav")).expanduser()
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -139,12 +137,8 @@ def speak(req: dict[str, Any]) -> dict[str, Any]:
         "text": text,
         "speed": float(req.get("speed") or 1.0),
     }
-    if prompt_audio:
-        if hasattr(model, "create_voice_clone_prompt"):
-            base_kwargs["voice_clone_prompt"] = model.create_voice_clone_prompt(ref_audio=prompt_audio, ref_text=prompt_text)
-        else:
-            base_kwargs["ref_audio"] = prompt_audio
-            base_kwargs["ref_text"] = prompt_text
+    if reference_audio:
+        base_kwargs["ref_audio"] = reference_audio
     voice_design = str(req.get("voiceDesign") or "").strip()
     if voice_design:
         base_kwargs["instruct"] = voice_design
@@ -182,6 +176,7 @@ def read_config(req: dict[str, Any]) -> LoadedConfig:
         compute_dtype=str(req.get("computeDtype") or "bfloat16"),
         cpu_offload=bool(req.get("cpuOffload", True)),
         offload_folder=str(req.get("offloadFolder") or ""),
+        load_asr=bool(req.get("loadAsr", False)),
     )
 
 
