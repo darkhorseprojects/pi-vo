@@ -27,6 +27,7 @@ log "Installing voice runtime"
   huggingface-hub \
   numpy \
   transformers \
+  onnxruntime \
   omnivoice \
   safetensors \
   scipy \
@@ -36,8 +37,6 @@ log "Installing voice runtime"
   nagisa \
   soynlp \
   qwen-omni-utils
-# qwen-asr has an overly strict transformers==4.57.6 pin, but works with transformers 5.x
-"$VENV/bin/python" -m pip install --no-deps qwen-asr
 
 if [[ "${PI_VO_INSTALL_FLASH_ATTN:-0}" == "1" ]]; then
   log "Installing flash-attn"

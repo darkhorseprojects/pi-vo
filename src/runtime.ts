@@ -359,12 +359,6 @@ export class PiVoRuntime {
   #asrParams(): Record<string, unknown> {
     return {
       model: this.config.asrModel,
-      deviceMap: this.config.asrDeviceMap,
-      dtype: this.config.asrDtype,
-      language: this.config.asrLanguage,
-      attnImplementation: this.config.asrAttnImplementation,
-      maxNewTokens: this.config.asrMaxNewTokens,
-      maxBatchSize: this.config.asrMaxBatchSize,
       sampleRate: this.config.recordSampleRate,
     };
   }
