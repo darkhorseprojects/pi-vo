@@ -317,6 +317,8 @@ export class PiVoRuntime {
 
   async #speakOnce(text: string, generation: number): Promise<string> {
     if (generation !== this.#speechGeneration) throw new SpeechCancelled();
+    const wasListening = this.#recorder !== undefined;
+    const savedCtx = this.#ctx;
     try {
       this.#setState("working");
       await this.#flushTranscript();
@@ -336,6 +338,10 @@ export class PiVoRuntime {
       this.#setState("speaking");
       await this.#output.play(result.path);
       if (generation !== this.#speechGeneration) throw new SpeechCancelled();
+      if (wasListening && savedCtx) {
+        this.#ctx = savedCtx;
+        if (!this.#recorder) this.#startRecorder(savedCtx);
+      }
       this.#setState(this.#recorder ? "listening" : "idle");
       return result.path;
     } catch (error) {
