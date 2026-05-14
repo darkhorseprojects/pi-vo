@@ -3,11 +3,29 @@ import gc
 import json
 import os
 import sys
+import warnings
 import traceback
+import contextlib
 from dataclasses import dataclass
 from typing import Any
 
 import numpy as np
+
+# Suppress HuggingFace download progress bars
+os.environ.setdefault("HF_HUB_VERBOSITY", "error")
+warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
+
+
+@contextlib.contextmanager
+def suppress_stderr():
+    """Context manager to suppress all stderr output during model loading."""
+    original_stderr = sys.stderr
+    sys.stderr = open(os.devnull, "w")
+    try:
+        yield
+    finally:
+        sys.stderr.close()
+        sys.stderr = original_stderr
 
 model = None
 loaded = None
@@ -66,12 +84,13 @@ def load(req: dict[str, Any]) -> dict[str, Any]:
 
     model_path = cfg.model
     if not os.path.isdir(model_path):
-        # Try huggingface hub download
+        # Try huggingface hub download (suppress all progress output)
         from huggingface_hub import snapshot_download
-        model_path = snapshot_download(
-            "cstr/cohere-transcribe-onnx-int4",
-            local_files_only=False,
-        )
+        with suppress_stderr():
+            model_path = snapshot_download(
+                "cstr/cohere-transcribe-onnx-int4",
+                local_files_only=False,
+            )
 
     encoder_path = os.path.join(model_path, "cohere-encoder.int4.onnx")
     decoder_path = os.path.join(model_path, "cohere-decoder.int4.onnx")

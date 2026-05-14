@@ -3,13 +3,33 @@ import inspect
 import json
 import os
 import sys
+import warnings
 import traceback
+import contextlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
 
+# Suppress transformers/optimum download progress bars
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+os.environ.setdefault("HF_HUB_VERBOSITY", "error")
+warnings.filterwarnings("ignore", category=UserWarning, module="transformers")
+warnings.filterwarnings("ignore", category=UserWarning, module="huggingface_hub")
+
 model = None
 loaded = None
+
+
+@contextlib.contextmanager
+def suppress_stderr():
+    """Context manager to suppress all stderr output during model loading."""
+    original_stderr = sys.stderr
+    sys.stderr = open(os.devnull, "w")
+    try:
+        yield
+    finally:
+        sys.stderr.close()
+        sys.stderr = original_stderr
 
 @dataclass(frozen=True)
 class LoadedConfig:
@@ -89,7 +109,9 @@ def load(req: dict[str, Any]) -> dict[str, Any]:
             },
         ]
 
-    model = call_from_pretrained(OmniVoice.from_pretrained, cfg.model, variants, cfg.load_in_4bit)
+    # Suppress download progress output
+    with suppress_stderr():
+        model = call_from_pretrained(OmniVoice.from_pretrained, cfg.model, variants, cfg.load_in_4bit)
     loaded = cfg
     return {"loaded": True, "model": cfg.model, "stats": stats()}
 

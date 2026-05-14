@@ -66,7 +66,11 @@ export class JsonWorker {
     stdout.on("line", (line) => this.handleLine(line));
 
     child.stderr.on("data", (chunk: Buffer) => {
-      process.stderr.write(`[pi-vo worker] ${chunk.toString()}`);
+      const text = chunk.toString();
+      // Only forward actual errors to stderr, not download progress
+      if (text.includes("Traceback") || text.includes("Error:") || text.includes("Exception:")) {
+        process.stderr.write(`[pi-vo worker] ${text}`);
+      }
     });
 
     child.on("error", (error) => this.fail(error));
@@ -85,7 +89,7 @@ export class JsonWorker {
     try {
       msg = JSON.parse(line) as typeof msg;
     } catch {
-      process.stderr.write(`[pi-vo worker] ${line}\n`);
+      // Silently ignore non-JSON lines (these are often download progress bars)
       return;
     }
 
