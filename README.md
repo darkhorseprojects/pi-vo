@@ -1,5 +1,7 @@
 # pi-vo
 
+[![Watch Reference Video](https://img.shields.io/badge/▶-Watch%20Reference%20Video-red?style=for-the-badge&logo=video&logoColor=white)](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
+
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
 
 [![CI](https://github.com/darkhorseprojects/pi-vo/actions/workflows/ci.yml/badge.svg)](https://github.com/darkhorseprojects/pi-vo/actions/workflows/ci.yml)
@@ -12,12 +14,6 @@ Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent
 - **Zero-latency**: Models run as persistent workers, no per-request loading
 - **Low VRAM**: 4-bit quantization with CPU offload reduces VRAM to ~6GB
 - **Configurable**: Voice personality via voice design parameters
-
-## Reference Usage
-
-<a href="https://chaosdiscovery.s-ul.eu/iB5hNOsX" target="_blank">
-  <img src="https://img.shields.io/badge/▶-Watch%20Reference%20Video-red?style=for-the-badge" alt="Watch reference usage video">
-</a>
 
 ## Usage
 
