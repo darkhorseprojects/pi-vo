@@ -118,7 +118,7 @@ PI_VO_TTS_CPU_OFFLOAD=1
 
 ---
 
-**Inspired by [P8N.ai](https://p8n.ai)'s pi-listens.**
+**Inspired by p8n-ai/pi-listens**
 
 ## License
 
