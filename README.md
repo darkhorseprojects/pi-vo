@@ -116,6 +116,10 @@ PI_VO_TTS_CPU_OFFLOAD=1
 - PipeWire or PulseAudio
 - ~6GB VRAM (with 4-bit quantization and CPU offload)
 
+---
+
+**Inspired by [P8N.ai](https://p8n.ai)'s pi-listens.**
+
 ## License
 
 Apache 2.0 - see [LICENSE](LICENSE) file for details.
