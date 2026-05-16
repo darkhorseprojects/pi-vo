@@ -1,5 +1,6 @@
 # pi-vo
 
+[![npm version](https://img.shields.io/npm/v/pi-vo)](https://www.npmjs.com/package/pi-vo)
 [![Watch Video](https://img.shields.io/badge/▶-Watch%20Video-red?style=for-the-badge)](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
 
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
