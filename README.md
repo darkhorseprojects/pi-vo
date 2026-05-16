@@ -2,9 +2,9 @@
 
 [![Watch Video](https://img.shields.io/badge/▶-Watch%20Video-red?style=for-the-badge)](https://chaosdiscovery.s-ul.eu/iB5hNOsX)
 
-[![npm version](https://img.shields.io/npm/v/@darkhorseprojects/pi-vo)](https://www.npmjs.com/package/@darkhorseprojects/pi-vo)
-
 Local voice extension for [Pi](https://github.com/earendil-works/pi-coding-agent) featuring resident ASR/TTS workers for low-latency speech-to-text and text-to-speech.
+
+[![npm version](https://img.shields.io/npm/v/@darkhorseprojects/pi-vo)](https://www.npmjs.com/package/@darkhorseprojects/pi-vo)
 
 [![CI](https://github.com/darkhorseprojects/pi-vo/actions/workflows/ci.yml/badge.svg)](https://github.com/darkhorseprojects/pi-vo/actions/workflows/ci.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/License-Apache--2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
