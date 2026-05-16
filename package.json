@@ -1,5 +1,5 @@
 {
-  "name": "pi-vo",
+  "name": "@darkhorseprojects/pi-vo",
   "version": "0.2.0",
   "description": "Local low-resource voice extension for Pi featuring sub-6GB VRAM TTS/ASR with 4-bit quantization.",
   "type": "module",
